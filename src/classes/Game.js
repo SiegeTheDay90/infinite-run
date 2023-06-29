@@ -55,16 +55,14 @@ class Game{
     
     run(){
         //settings?
-        this.platformSpawn([0, 100], 10, [-0.5, 0]);
+        this.platformSpawn([0, 100], 4, [-0.5, 0]);
         this.player = new Player(this.context, this);
         window.player = this.player;
         this.objects.add(this.player);
 
 
-        // setInterval(() => {this.platformSpawn([this.dimensions[0], undefined], Math.random()*2.5+1, [-4, 0])}, 1250);
-        // setInterval(() => {this.platformSequence(sequence1)}, 4500);
-        this.platformSequence(sequences.test);
-        setInterval(() => {this.platformSequence((sequences.test))}, 1000);
+        this.platformSequence(sequences.easy[1]);
+        setInterval(() => {this.platformSequence((randomEl(sequences.easy)))}, 4000);
         this.animate();
     }
 
