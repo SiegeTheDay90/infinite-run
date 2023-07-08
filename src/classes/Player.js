@@ -13,35 +13,32 @@ class Player extends SolidObject{
         this.coolDown = {};
     }
 
-    move(){
-        // debugger;
-        this.velocity = [this.velocity[0]*0.995, Math.min(this.velocity[1] + 0.2, 9)];
-        if(this.velocity[0] < 0.5){
+    move(delta){
+
+        if(!this.footing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.2, 9)]};
+
+        if(this.velocity[0] < 0.5 && this.velocity[0] > -0.5){
             this.velocity[0] = 0;
         }
 
         if(this.velocity[1] > 0 && Array.from(this.game.platforms).some(object => object !== this && this.collides(object) && (this.footing = object))){
             if(!this.standing){ // land from air
                 this.impact = Math.floor((this.velocity[1]/2))
-                // this.velocity[0] = Math.max(this.velocity[0]*0.95, this.footing?.velocity[0])
                 this.rolling = true;
                 setTimeout(() => {
                     this.coolDown["jump"] = false;
                     this.rolling = false;
                 }, 200*this.impact)
+                this.velocity[1] = 0;
             }
-            this.velocity[1] = 0;
-            this.position[1] = this.footing.position[1]+1-this.dimensions[1];
+            // this.position[1] = this.footing.position[1]+1-this.dimensions[1];
             this.standing = true;
         } else {
             this.footing = undefined;
             this.standing = false;
         }
     
-        this.position = [
-            this.position[0] + (this.velocity[0]+(this.footing?.velocity[0]+1 || 0))*this.game.scale, 
-            this.position[1] + (this.velocity[1]+ (this.footing?.velocity[1]+1 || 0))*this.game.scale
-        ]
+        super.move(delta);
 }
     
     spriteArgs(){
@@ -49,7 +46,6 @@ class Player extends SolidObject{
 
         let spritePosition = [40*Math.floor(this.spriteState/6), 1];
         const relative_velocity = this.velocity[0] - (this.footing?.velocity[0] || 0);
-        debugger;
         
         if(this.rolling){
             spritePosition = [200 + 40*Math.floor(this.spriteState/16), 80]
@@ -90,17 +86,16 @@ class Player extends SolidObject{
                 this.jump();
                 this.keysDown[e.key] ||= setInterval(this.jump.bind(this), 300);
                 
-            } else if(e.key == "ArrowRight" && this.standing){
+            } else if(e.key == "ArrowRight"){ //} && this.standing){
                 e.preventDefault();
                 
-                this.velocity = [Math.min(this.velocity[0]+0.7, 8), this.velocity[1]];
-                this.keysDown[e.key] ||= setInterval(function(){if(this.standing) this.velocity = [Math.min(this.velocity[0]+0.7, 4.7), this.velocity[1]]}.bind(this), 200);
+                this.keysDown[e.key] ||= setInterval(function(){if(this.standing) this.velocity = [Math.min((this.velocity[0]||1)*1.20, 8), this.velocity[1]]}.bind(this), 100);
                 
-            } else if(e.key == "ArrowLeft" && this.standing){
+            } else if(e.key == "ArrowLeft"){ //&& this.standing){
                 e.preventDefault();
                
-                this.velocity = [Math.max(this.velocity[0]-0.7, -8), this.velocity[1]]
-                this.keysDown[e.key] ||= setInterval(function(){if(this.standing) this.velocity = [Math.max(this.velocity[0]-0.7, -4.7), this.velocity[1]]}.bind(this), 200);
+                // this.velocity = [Math.max(this.velocity[0]-0.7, -8), this.velocity[1]]
+                this.keysDown[e.key] ||= setInterval(function(){if(this.standing) this.velocity = [this.footing.velocity[0], this.velocity[1]]}.bind(this), 200);
             
             }
         }.bind(this));

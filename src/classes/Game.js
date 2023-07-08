@@ -25,8 +25,8 @@ class Game{
 
 
     move(delta){
-        this.objects.forEach(object => object.move(delta * this.scale));
-        this.platforms.forEach(object => object.move(delta * this.scale));
+        this.objects.forEach(object => object.move(delta));
+        this.platforms.forEach(object => object.move(delta));
     }
 
     draw(){
