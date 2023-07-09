@@ -4,18 +4,24 @@ import "./index.scss";
 "use strict";
 
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById("canvas");
-    const context = canvas.getContext("2d")
-    const viewPortHeight = window.innerHeight;
-    const viewPortWidth = window.innerWidth;
+    const game = document.getElementById("game");
+    const background = document.getElementById("background");
+    const canvasContainer = document.getElementById("canvas-container");
+    const contexts = {
+        background: background.getContext("2d"),
+        game: game.getContext("2d")
+    }
+
+    const viewPortWidth = window.innerWidth;    
+    game.width = Math.min(viewPortWidth * 0.7, 800);
+    game.height = game.width * (8/16);
+    background.width = game.width;
+    background.height = game.height;
+    canvasContainer.style.width = game.width;
+    canvasContainer.style.height = game.height;
     
-    // canvas.height = viewPortHeight*0.8;
-    // canvas.width = canvas.height*(9/16);
-    canvas.width = Math.min(viewPortWidth * 0.7, 800);
-    canvas.height = canvas.width * (8/16);
     
-    
-    const game = new Game(context, [canvas.width, canvas.height]);
-    game.run();
+    const _ = new Game(contexts, [game.width, game.height]);
+    _.run();
 })
 

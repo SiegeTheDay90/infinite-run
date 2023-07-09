@@ -2,8 +2,8 @@ import SolidObject from "./SolidObject";
 
 
 class Platform extends SolidObject {
-    constructor(context, game, [x, y] = position, width=2, velocity=[0, 0]){
-        super(context, game, [x, y], velocity, [width, 10]);
+    constructor(context, game, position, width, velocity=[0, 0]){
+        super(context, game, position, velocity, [width, 10]);
     }
 
     move(delta){
@@ -16,6 +16,10 @@ class Platform extends SolidObject {
     draw(color="red"){
         this.context.fillStyle = color;
         this.context.fillRect(...this.position, this.dimensions[0], this.dimensions[1]);
+    }
+
+    destroy(){
+        this.game.platforms.delete(this);
     }
 }
 

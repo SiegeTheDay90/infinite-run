@@ -2,7 +2,7 @@ import SolidObject from "./SolidObject";
 
 class Player extends SolidObject{
     constructor(context, game){
-        super(context, game, [50*game.scale, 25*game.scale], [0, 0], [60*game.scale, 60*game.scale]);
+        super(context, game, [game.dimensions[0]/4, 5], [0, 0], [60*game.scale, 60*game.scale]);
         this.addListeners();
         this.standing = false;
         this.footing = undefined;
@@ -15,31 +15,37 @@ class Player extends SolidObject{
 
     move(delta){
 
-        if(!this.footing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.2, 9)]};
+        if(!this.standing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.17, 9)]}
+        else{
+            this.velocity[1] = 0;
+            if(this.velocity[0] > 3){
+                this.velocity[0] *= 0.95;
+            }
+        };
 
-        if(this.velocity[0] < 0.5 && this.velocity[0] > -0.5){
-            this.velocity[0] = 0;
-        }
-
-        if(this.velocity[1] > 0 && Array.from(this.game.platforms).some(object => object !== this && this.collides(object) && (this.footing = object))){
+        if(this.velocity[1] >= 0 && Array.from(this.game.platforms).some(object => object !== this && this.collides(object) && (this.footing = object))){
             if(!this.standing){ // land from air
-                this.impact = Math.floor((this.velocity[1]/2))
+                this.impact = Math.floor((this.velocity[1]/2));
+                this.velocity[0] += this.footing.velocity[0]*0.10*this.impact;
                 this.rolling = true;
                 setTimeout(() => {
                     this.coolDown["jump"] = false;
                     this.rolling = false;
                 }, 200*this.impact)
                 this.velocity[1] = 0;
+                this.standing = true;
+                this.position[1] = this.footing.position[1]-this.dimensions[0]+5*this.game.scale;
             }
-            // this.position[1] = this.footing.position[1]+1-this.dimensions[1];
-            this.standing = true;
         } else {
             this.footing = undefined;
             this.standing = false;
         }
-    
-        super.move(delta);
-}
+        debugger;
+        this.position = [
+            this.position[0]/this.game.dimensions[0] > 0.9 ? this.position[0] + this.velocity[0]*delta*this.game.scale : this.position[0], 
+            this.position[1] + this.velocity[1]*delta*this.game.scale
+        ]
+    }
     
     spriteArgs(){
         this.spriteState = (this.spriteState+1)%48;
@@ -89,13 +95,20 @@ class Player extends SolidObject{
             } else if(e.key == "ArrowRight"){ //} && this.standing){
                 e.preventDefault();
                 
-                this.keysDown[e.key] ||= setInterval(function(){if(this.standing) this.velocity = [Math.min((this.velocity[0]||1)*1.20, 8), this.velocity[1]]}.bind(this), 100);
+                this.keysDown[e.key] ||= setInterval(function(){
+                    if(this.standing){
+                        this.velocity = [Math.min((this.velocity[0] > 0 ? this.velocity[0] : 1)*1.20, 8), this.velocity[1]];
+                    }
+                }.bind(this), 100);
                 
             } else if(e.key == "ArrowLeft"){ //&& this.standing){
                 e.preventDefault();
                
-                // this.velocity = [Math.max(this.velocity[0]-0.7, -8), this.velocity[1]]
-                this.keysDown[e.key] ||= setInterval(function(){if(this.standing) this.velocity = [this.footing.velocity[0], this.velocity[1]]}.bind(this), 200);
+                this.keysDown[e.key] ||= setInterval(function(){
+                    if(this.standing){
+                        this.velocity = [this.footing.velocity[0], this.velocity[1]];
+                    }
+                }.bind(this), 200);
             
             }
         }.bind(this));
@@ -109,7 +122,7 @@ class Player extends SolidObject{
     jump(){
         if(!this.coolDown["jump"]){
             this.position = [this.position[0], this.position[1]-7];
-            this.velocity = [this.velocity[0], -7];
+            this.velocity = [this.velocity[0], -8];
             this.coolDown["jump"] = true;
             this.standing = false;
             this.footing = undefined;

@@ -1,6 +1,6 @@
 class SolidObject {
     constructor(context, game, position = [0, 0], velocity = [0, 0], dimensions = [10, 10]){
-        this.position = position;
+        this.position = [position[0]*game.scale, position[1]*game.scale];
         this.dimensions = [dimensions[0]*game.scale, dimensions[1]*game.scale];
         this.velocity = velocity;
         this.context = context;
@@ -9,8 +9,8 @@ class SolidObject {
 
     move(delta){
         this.position = [
-            this.position[0] + this.velocity[0]*delta, 
-            this.position[1] + this.velocity[1]*delta
+            this.position[0] + this.velocity[0]*delta*this.game.scale, 
+            this.position[1] + this.velocity[1]*delta*this.game.scale
         ]
     }
 
