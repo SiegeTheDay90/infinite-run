@@ -2,6 +2,7 @@ import Platform from "./Platform";
 import Building from "./Building";
 import sequences from "../util/platformSequences";
 import Player from "./Player";
+import Background from "./Background";
 
 class Game{
     constructor(contexts, dimensions){ // base width and height = 800 x 450
@@ -19,6 +20,7 @@ class Game{
         this.last_y = this.dimensions[1]*0.75;
         this.lastTime = 0;
         this.animate = this.animate.bind(this);
+        this.background = new Background(contexts.background, this);
     }
 
     resize(dimensions){
@@ -30,9 +32,11 @@ class Game{
     move(delta){
         this.objects.forEach(object => object.move(delta));
         this.platforms.forEach(object => object.move(delta));
+        this.background.move(delta);
     }
 
     draw(){
+        this.background.draw();
         this.gameContext.clearRect(0, 0, ...this.dimensions);
         this.objects.forEach(object => object.draw());
         this.platforms.forEach(object => object.draw());
@@ -47,7 +51,6 @@ class Game{
     }
 
     async platformSequence(sequenceObj){
-        // console.log(sequenceObj.title)
         const sequence = sequenceObj.sequence
 
 
@@ -56,7 +59,6 @@ class Game{
             const platform = sequence[i];
             const {y, width, timing, velocity} = platform;
             this.buildingSpawn([this.dimensions[0], y+this.last_y], width, velocity);
-            // console.log(`Spawned Platform now waiting ${timing}ms`)
             await sleep(timing);
             if(i === sequence.length-1){
                 const nextSequenceObj = randomEl(sequences.easy);
@@ -74,8 +76,7 @@ class Game{
     }
     
     run(){
-        this.bgContext.fillStyle = "#999999";
-        this.bgContext.fillRect(0, 0, ...this.dimensions);
+
         this.buildingSpawn([100, this.last_y], 800, [-10, 0]);
         this.player = new Player(this.gameContext, this);
         window.player = this.player;
