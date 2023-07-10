@@ -15,10 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewPortWidth = window.innerWidth;    
     game.width = Math.min(viewPortWidth * 0.7, 800);
     game.height = game.width * (8/16);
-    background.width = game.width;
-    background.height = game.height;
-    canvasContainer.style.width = game.width;
-    canvasContainer.style.height = game.height;
+    background.width = Math.min(viewPortWidth * 0.7, 800);
+    background.height = game.width * (8/16);
+    console.log(game, game.width);
+    console.log(background, background.width);
+    canvasContainer.style.width = game.width+2;
+    canvasContainer.style.height = game.height+2;
     
     
     const _ = new Game(contexts, [game.width, game.height]);

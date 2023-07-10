@@ -9,6 +9,7 @@ class Game{
         this.bgContext = contexts.background;
         this.dimensions = dimensions;
         this.scale = dimensions[0]/800;
+        this.speed = 1;
         this.playing = false;
         this.gameOver = false;
         this.score = 0;
@@ -46,7 +47,7 @@ class Game{
     }
 
     async platformSequence(sequenceObj){
-        console.log(sequenceObj.title)
+        // console.log(sequenceObj.title)
         const sequence = sequenceObj.sequence
 
 
@@ -55,7 +56,7 @@ class Game{
             const platform = sequence[i];
             const {y, width, timing, velocity} = platform;
             this.buildingSpawn([this.dimensions[0], y+this.last_y], width, velocity);
-            console.log(`Spawned Platform now waiting ${timing}ms`)
+            // console.log(`Spawned Platform now waiting ${timing}ms`)
             await sleep(timing);
             if(i === sequence.length-1){
                 const nextSequenceObj = randomEl(sequences.easy);
@@ -73,7 +74,7 @@ class Game{
     }
     
     run(){
-        this.bgContext.fillStyle = "#333333";
+        this.bgContext.fillStyle = "#999999";
         this.bgContext.fillRect(0, 0, ...this.dimensions);
         this.buildingSpawn([100, this.last_y], 800, [-10, 0]);
         this.player = new Player(this.gameContext, this);

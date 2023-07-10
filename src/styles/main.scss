@@ -1,58 +1,67 @@
 @use './colors.scss';
 
-html{
-    background-color: rgb(175, 179, 201);
-}
-
-body{
-    width: 80vw;
-    margin: 0 auto;
-}
 #main {
-    display: flex;
-    padding: 1px;
-    text-align:  center;
-}
-
-#left {
-    width: 25%
-}
-#right {
     width: 100%;
+    display: flex;
+    padding: 20px 20px 20px 40px;
+    border-radius: 20px;
+    background-color: $dark-gray;
+    height: 50vh;
+    justify-content: space-around;
 }
 
-section#right {
+
+#canvas-container {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    text-align: left;
+    align-self: center;
+}
+
+#game {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#right {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    width: 25%;
     a{
+        color: $red;
+        &:visited{
+            color: $yellow;
+        }
         &:first-child{
-            animation-duration: 7s;
+            animation-duration: 4s;
             animation-name: shake;
             animation-iteration-count: infinite;
             animation-direction: normal;
         }        
         @keyframes shake {
             0% {
-                transform: rotate(0.5deg);
+                transform: rotate(1deg);
             }
         
             1% {
-                transform: rotate(-0.5deg);
+                transform: rotate(-1deg);
             }
             2% {
-                transform: rotate(0.5deg);
+                transform: rotate(1deg);
             }
         
             3% {
-                transform: rotate(-0.5deg);
+                transform: rotate(-1deg);
             }
             4% {
-                transform: rotate(0.5deg);
+                transform: rotate(1deg);
             }
         
             5% {
-                transform: rotate(-0.5deg);
+                transform: rotate(-1deg);
             }
             6% {
                 transform: scale(1, 1)
@@ -69,7 +78,7 @@ section#right {
         }
     }
     img {
-        height: 15vh;
         width: 15vw;
+        max-width: 225px;
     }
 }
