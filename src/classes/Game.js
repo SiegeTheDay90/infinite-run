@@ -58,7 +58,7 @@ class Game{
         for(let i = 0; i < sequence.length; i++){
             const platform = sequence[i];
             const {y, width, timing, velocity} = platform;
-            this.buildingSpawn([this.dimensions[0], y+this.last_y], width, velocity);
+            this.buildingSpawn([800, y+this.last_y], width, velocity);
             await sleep(timing);
             if(i === sequence.length-1){
                 const nextSequenceObj = randomEl(sequences.easy);

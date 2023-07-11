@@ -2,7 +2,7 @@ import SolidObject from "./SolidObject";
 
 class Star extends SolidObject {
     constructor(context, game, position, velocity=[-1, 0]){
-        const size = (0.25*game.scale)/(Math.abs(1/velocity[0]));
+        const size = (0.7*game.scale)/(Math.abs(1/velocity[0]));
         super(context, game, position, velocity, [size, size]);
     }
     
@@ -18,7 +18,6 @@ class Star extends SolidObject {
     }
 
     destroy(){
-        console.log("Star Destroyed :(")
         this.game.objects.delete(this);
     }
 }
