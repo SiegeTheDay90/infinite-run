@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     game.height = game.width * (8/16);
     background.width = Math.min(viewPortWidth * 0.7, 800);
     background.height = game.width * (8/16);
-    console.log(game, game.width);
-    console.log(background, background.width);
     canvasContainer.style.width = game.width+2;
     canvasContainer.style.height = game.height+2;
     

@@ -15,7 +15,7 @@ class Player extends SolidObject{
 
     move(delta){
 
-        if(!this.standing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.17, 9)]}
+        if(!this.standing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.4, 16)]}
         else{
             this.velocity = [this.velocity[0]*0.995, this.footing.velocity[0]];
             this.velocity[1] = 0;
@@ -23,7 +23,7 @@ class Player extends SolidObject{
 
         if(this.velocity[1] >= 0 && Array.from(this.game.platforms).some(object => object !== this && this.collides(object) && (this.footing = object))){
             if(!this.standing){ // land from air
-                this.impact = Math.floor((this.velocity[1]/2));
+                this.impact = Math.floor((this.velocity[1]/4));
                 this.velocity[0] += this.footing.velocity[0]*0.20*this.impact;
                 if(this.velocity[0] < this.footing.velocity[0]){
                     this.velocity[0] = this.footing.velocity[0];
@@ -124,12 +124,22 @@ class Player extends SolidObject{
     jump(){
         if(!this.coolDown["jump"]){
             this.position = [this.position[0], this.position[1]-7];
-            this.velocity = [this.velocity[0], -10];
+            this.velocity = [this.velocity[0], -20];
             this.coolDown["jump"] = true;
             this.standing = false;
             this.footing = undefined;
         }
     }
+
+    collisionBox(){
+        return [
+            [this.position[0], this.position[1]+this.dimensions[1]*0.9], 
+            [this.position[0]+this.dimensions[0], this.position[1]+this.dimensions[1]*0.9], 
+            [this.position[0]+this.dimensions[0], this.position[1]+this.dimensions[1]], 
+            [this.position[0], this.position[1]+this.dimensions[1]]
+        ]
+    }
+
 }
 
 
