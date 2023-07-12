@@ -9,6 +9,7 @@ class Player extends SolidObject{
         this.spriteSheet = new Image();
         this.spriteSheet.src = "./runner.png";
         this.spriteState = 0;
+        this.death = false;
         this.keysDown = {};
         this.coolDown = {};
     }
@@ -53,6 +54,15 @@ class Player extends SolidObject{
             this.position[0] + this.velocity[0]*delta*this.game.scale, 
             this.position[1] + this.velocity[1]*delta*this.game.scale
         ]
+
+        if(this.position[0] <= 0){
+            this.position[0] = 0;
+        }
+
+        if(this.position[1] > this.game.dimensions[1]){
+            this.death = true;
+            this.game.gameOver = true;
+        }
     }
     
     spriteArgs(){
