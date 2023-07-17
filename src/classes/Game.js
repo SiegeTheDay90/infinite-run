@@ -42,9 +42,9 @@ class Game{
 
 
     move(delta){
-        this.objects.forEach(object => object.move(delta));
-        this.platforms.forEach(object => object.move(delta));
-        this.background.move(delta);
+        this.objects.forEach(object => object.move(delta*1.1));
+        this.platforms.forEach(platform => platform.move(delta*1.1));
+        this.background.move(delta*1.1);
     }
 
     draw(){
@@ -57,6 +57,10 @@ class Game{
             this.gameContext.fillStyle = ["#ffffff", "#e3e3ee", "#e3e3eff", "#f3f3ff", "#ddddee"][Math.floor(Math.random()*5)];
             this.gameContext.font = "28px serif";
             this.gameContext.fillText("Click to Begin", this.dimensions[0]*0.4, this.dimensions[1]*0.7, this.dimensions[0]*0.8);
+        } else {
+            this.gameContext.fillStyle = "#ffffff";
+            this.gameContext.font = "24px serif";
+            this.gameContext.fillText(`Score: ${this.score}`, 28, 28, this.dimensions[0]);
         }
     }
 

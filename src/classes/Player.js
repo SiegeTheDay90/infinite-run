@@ -2,7 +2,7 @@ import SolidObject from "./SolidObject";
 
 class Player extends SolidObject{
     constructor(context, game){
-        super(context, game, [game.dimensions[0]/4, 5], [0, 0], [60*game.scale, 60*game.scale]);
+        super(context, game, [game.dimensions[0]/4, 5], [0, 0], [45*game.scale, 45*game.scale]);
         this.addListeners();
         this.standing = false;
         this.footing = undefined;
@@ -19,11 +19,17 @@ class Player extends SolidObject{
         if(!this.standing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.4, 16)]}
         else{
             this.velocity = [this.velocity[0]*0.995, this.footing.velocity[0]];
+            if(this.velocity[0] >= this.footing.velocity[0]*0.5 && !this.keysDown["ArrowRight"]){
+                this.velocity[0] += this.footing.velocity[0]*0.1
+            }
             this.velocity[1] = 0;
         };
 
         if(this.velocity[1] >= 0 && Array.from(this.game.platforms).some(object => object !== this && this.collides(object) && (this.footing = object))){
             if(!this.standing){ // land from air
+                this.scoringInterval = setInterval(() => {
+                    this.game.score += 10;
+                }, 250);
                 this.impact = Math.floor((this.velocity[1]/4));
                 this.velocity[0] += this.footing.velocity[0]*0.20*this.impact;
                 if(this.velocity[0] < this.footing.velocity[0]){
@@ -39,6 +45,7 @@ class Player extends SolidObject{
                 this.position[1] = this.footing.position[1]-this.dimensions[0]+5*this.game.scale;
             }
         } else {
+            clearInterval(this.scoringInterval);
             this.footing = undefined;
             this.standing = false;
         }
@@ -83,10 +90,10 @@ class Player extends SolidObject{
             spritePosition = [162, 80];        
         } else if(!this.standing && this.velocity[1] > 1){ // falling slow
             spritePosition = [122, 80];
-        } else if(this.standing && Math.abs(relative_velocity) < 1){ // standing, not running
+        } else if(this.standing && Math.abs(relative_velocity) < 1 && this.position[0] > 0){ // standing, not running
             spritePosition = [202, 80];
             this.velocity[0] = this.footing.velocity[0];
-        } else if(this.standing && relative_velocity > -2){ // running quickly
+        } else if(this.standing){ // running
             spritePosition[1] = 41;
         }
 
@@ -108,7 +115,7 @@ class Player extends SolidObject{
                 e.preventDefault();
                 
                 this.keysDown[e.key] ||= setInterval(function(){
-                    if(this.standing){
+                    if(this.standing && !this.rolling){
                         this.velocity = [Math.min((this.velocity[0] > 0 ? this.velocity[0] : 1)*1.20, 8), this.velocity[1]];
                     }
                 }.bind(this), 100);

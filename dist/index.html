@@ -19,6 +19,31 @@
         </header>
         <h2>Use the arrow keys and space bar to play!</h2>
         <div id="main">
+            <section id='left'>
+                <h3>Settings</h3>
+                <div class='settings-div'>
+                    <h4>Control Type</h4>
+                    <div id='control-buttons'>
+                        <button value="mouse" class="control-button" disabled><i class="fa-solid fa-mouse"></i></button>
+                        <button value="keyboard" class="control-button"><i class="fa-solid fa-keyboard"></i></button>
+                    </div>
+                </div>
+                <div class="settings-div">
+                    <h4>Sound</h4>
+                    <div id='sound-buttons'>
+                        <button value="soundOn" class="sound-button" disabled><i class="fa-solid fa-volume-high" ></i></button>
+                        <button value="soundOff" class="sound-button"><i class="fa-solid fa-volume-xmark"></i></button>
+                    </div>
+                </div>
+                <div class='speed-div'>
+                    <h4>Game Speed</h4>
+                    <figure id = "speedometer">►►</figure>
+                    <form action="" method="" id='game-speed'>
+                        <input class="speed-button" type="button" value="Slower"><br>
+                        <input class="speed-button" type="button" value="Faster">
+                    </form>
+                </div>
+            </section>
             <section id="canvas-container">
                 <canvas id="background" class="game-canvas"></canvas>
                 <canvas id="game" class="game-canvas"></canvas>
