@@ -1,0 +1,37 @@
+#left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 20%;
+
+    h3{
+        font-weight: bolder;
+    }
+
+    h4{
+        position: relative;
+        display: block;
+        height: fit-content;
+    }
+
+    .settings-div {
+        height: 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        .control-button, .sound-button{
+            height: max-content;
+            border-radius: 50%;
+            font-size: larger;
+            padding: 10px;
+            border: none;
+        }
+    }
+
+    .speed-div{
+        height: 30%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+}

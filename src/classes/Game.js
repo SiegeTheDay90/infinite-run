@@ -3,6 +3,7 @@ import Building from "./Building";
 import sequences from "../util/platformSequences";
 import Player from "./Player";
 import Background from "./Background";
+import Speedometer from "./Speedometer";
 
 class Game{
     constructor(contexts, dimensions){ // base width and height = 800 x 450
@@ -42,9 +43,9 @@ class Game{
 
 
     move(delta){
-        this.objects.forEach(object => object.move(delta));
-        this.platforms.forEach(object => object.move(delta));
-        this.background.move(delta);
+        this.objects.forEach(object => object.move(delta*1.1));
+        this.platforms.forEach(platform => platform.move(delta*1.1));
+        this.background.move(delta*1.1);
     }
 
     draw(){
@@ -57,6 +58,10 @@ class Game{
             this.gameContext.fillStyle = ["#ffffff", "#e3e3ee", "#e3e3eff", "#f3f3ff", "#ddddee"][Math.floor(Math.random()*5)];
             this.gameContext.font = "28px serif";
             this.gameContext.fillText("Click to Begin", this.dimensions[0]*0.4, this.dimensions[1]*0.7, this.dimensions[0]*0.8);
+        } else {
+            this.gameContext.fillStyle = "#ffffff";
+            this.gameContext.font = "20px serif";
+            this.gameContext.fillText(`Score: ${this.score}`, 600*this.scale, 28*this.scale, this.dimensions[0]);
         }
     }
 
@@ -84,8 +89,8 @@ class Game{
             }
             const platform = sequence[i];
             const {y, width, timing, velocity} = platform;
-            this.buildingSpawn([800, y+this.last_y], width, velocity);
-            await sleep(timing);
+            this.buildingSpawn([800, y+this.last_y], width*this.scale, velocity);
+            await sleep(timing*this.scale);
             if(i === sequence.length-1 && this.started){
                 const nextSequenceObj = randomEl(sequences.easy);
                 this.platformSequence(nextSequenceObj);
@@ -119,8 +124,10 @@ class Game{
         this.spawnerId = undefined;
         this.buildingSpawn([100, this.last_y], 800, [-10, 0]);
         this.player = new Player(this.gameContext, this);
+        this.speedometer = new Speedometer(this.gameContext, this);
         this.objects.add(this.player);
-        setTimeout(this.platformSequence.bind(this, (sequences.easy[1])), 1000);
+        this.objects.add(this.speedometer);
+        setTimeout(this.platformSequence.bind(this, (sequences.easy[0])), 1000);
     }
 
 
