@@ -9,6 +9,7 @@ class Player extends SolidObject{
         this.spriteSheet = new Image();
         this.spriteSheet.src = "./runner.png";
         this.spriteState = 0;
+        this.relativeSpeed = 0;
         this.death = false;
         this.keysDown = {};
         this.coolDown = {};
@@ -64,6 +65,7 @@ class Player extends SolidObject{
 
         if(this.position[0] <= 0){
             this.position[0] = 0;
+            this.velocity[0] = 0;
         }
 
         if(this.position[1] > this.game.dimensions[1]){
@@ -116,7 +118,7 @@ class Player extends SolidObject{
                 
                 this.keysDown[e.key] ||= setInterval(function(){
                     if(this.standing && !this.rolling){
-                        this.velocity = [Math.min((this.velocity[0] > 0 ? this.velocity[0] : 1)*1.20, 8), this.velocity[1]];
+                        this.velocity = [Math.min((this.velocity[0] > 0 ? this.velocity[0] : 1)*1.20, 10), this.velocity[1]];
                     }
                 }.bind(this), 100);
                 
@@ -141,7 +143,7 @@ class Player extends SolidObject{
     jump(){
         if(!this.coolDown["jump"]){
             this.position = [this.position[0], this.position[1]-7];
-            this.velocity = [this.velocity[0], -20];
+            this.velocity = [this.velocity[0], -18];
             this.coolDown["jump"] = true;
             this.standing = false;
             this.footing = undefined;

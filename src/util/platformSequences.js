@@ -1,9 +1,9 @@
 var stepUp = {
     title: "stepUp",
     sequence: [
-        {y: 0, width: 550, timing: 5000, velocity: [-9, 0]},
-        {y: -60, width: 550, timing: 5000, velocity: [-9, 0]},
-        {y: -120, width: 550, timing: 5000, velocity: [-9, 0]},
+        {y: 0, width: 550, timing: 5500, velocity: [-9, 0]},
+        {y: -60, width: 550, timing: 5500, velocity: [-9, 0]},
+        {y: -120, width: 650, timing: 7000, velocity: [-9, 0]},
     ],
 }
 
@@ -19,7 +19,7 @@ var saddle = {
     title: "saddle",
     sequence: [
         {y: 20, width: 550, timing: 5500, velocity: [-9, 0]},
-        {y: -40, width: 550, timing: 5500, velocity: [-9, 0]},
+        {y: -40, width: 600, timing: 5500, velocity: [-9, 0]},
         {y: 20, width: 550, timing: 6500, velocity: [-9, 0]},
     ],
 }
@@ -28,8 +28,8 @@ var dip = {
     title: "dip",
     sequence: [
         {y: -60, width: 550, timing: 6000, velocity: [-9, 0]},
-        {y: 20, width: 550, timing: 4500, velocity: [-9, 0]},
-        {y: -60, width: 550, timing: 6000, velocity: [-9, 0]},
+        {y: 20, width: 550, timing: 6000, velocity: [-9, 0]},
+        {y: -60, width: 550, timing: 4000, velocity: [-9, 0]},
     ],
 }
 
@@ -50,7 +50,7 @@ var test = {
 
 
 const sequences = {
-    easy: [stepUp, straighHop, saddle, dip], // gap],
+    easy: [stepUp],// straighHop, saddle, dip], // gap],
     medium: [gap],
     hard: [],
     test: [test]
