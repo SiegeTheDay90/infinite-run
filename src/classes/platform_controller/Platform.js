@@ -1,4 +1,4 @@
-import SolidObject from "./SolidObject";
+import SolidObject from "../abstract_classes/SolidObject";
 
 
 class Platform extends SolidObject {

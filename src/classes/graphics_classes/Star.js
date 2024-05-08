@@ -1,4 +1,4 @@
-import SolidObject from "./SolidObject";
+import SolidObject from "../abstract_classes/SolidObject";
 
 class Star extends SolidObject {
     constructor(context, game, position, velocity=[-1, 0]){
