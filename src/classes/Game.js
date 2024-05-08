@@ -1,13 +1,15 @@
-import Platform from "./Platform";
-import Building from "./Building";
+
 import sequences from "../util/platformSequences";
-import Player from "./Player";
-import Background from "./Background";
-import Speedometer from "./Speedometer";
+import Player from "./entities/Player";
+import Background from "./graphics_classes/Background";
+import Speedometer from "./graphics_classes/Speedometer";
+import PlatformController from "./platform_controller/platform_controller";
+import Barrier from "./entities/Barrier";
 
 class Game{
     constructor(contexts, dimensions){ // base width and height = 800 x 450
         this.gameContext = contexts.game;
+        this.platformController = new PlatformController(this);
         this.bgContext = contexts.background;
         this.dimensions = dimensions;
         this.scale = dimensions[0]/800;
@@ -19,12 +21,12 @@ class Game{
         this.score = 0;
         this.objects = new Set();
         this.platforms = new Set();
+        this.staticObjects = new Set();
         this.last_y = this.dimensions[1]*0.75;
         this.lastTime = 0;
         this.animate = this.animate.bind(this);
-        this.buildingSpawn = this.buildingSpawn.bind(this);
-        this.platformSpawn = this.platformSpawn.bind(this);
         this.background = new Background(contexts.background, this);
+        this.barrier;
         this.addListeners();
     }
 
@@ -42,16 +44,21 @@ class Game{
     }
 
 
-    move(delta){
+    update(delta){
+        this.player?.move(delta*1.1);
         this.objects.forEach(object => object.move(delta*1.1));
         this.platforms.forEach(platform => platform.move(delta*1.1));
         this.background.move(delta*1.1);
+        this.barrier?.move(delta*1.1);
     }
 
     draw(){
         this.background.draw();
         this.gameContext.clearRect(0, 0, ...this.dimensions);
+        this.player?.draw();
+        this.barrier?.draw();
         this.objects.forEach(object => object.draw());
+        this.staticObjects.forEach(object => object.draw());
         this.platforms.forEach(object => object.draw());
         if(!this.started){
             this.gameContext.drawImage(this.logo, this.dimensions[0]*0.2, 0, this.dimensions[0]*0.6, this.dimensions[1]*0.6);
@@ -75,45 +82,31 @@ class Game{
         }
         const delta = time - this.lastTime;
         this.lastTime = time;
-        this.move(delta/60);
+        this.update(delta/60);
         this.draw();
         requestAnimationFrame(this.animate);
     }
 
-    async platformSequence(sequenceObj){
-        const sequence = sequenceObj.sequence
-        
-        for(let i = 0; i < sequence.length; i++){
-            if(!this.started){
-                break;
-            }
-            const platform = sequence[i];
-            const {y, width, timing, velocity} = platform;
-            this.buildingSpawn([800, y+this.last_y], width*this.scale, velocity);
-            await sleep(timing*this.scale);
-            if(i === sequence.length-1 && this.started){
-                const nextSequenceObj = randomEl(sequences.easy);
-                this.platformSequence(nextSequenceObj);
-            }
-        }
+    // Game#scrollX
 
-    }
-
-    platformSpawn(position, width, velocity=[-8, 0]){
-        this.platforms.add(new Platform(this.gameContext, this, [...position], width, [...velocity]));
-    }
-    buildingSpawn(position, width, velocity=[-8, 0]){
-        this.platforms.add(new Building(this.gameContext, this, [...position], width, [...velocity]));
-    }
+    scrollX(dx){
+        this.barrier.position[0] += dx;
+        this.objects.forEach(object => object.position[0] += dx);
+        this.platforms.forEach(object => object.position[0] += dx);
+    }    
     
+
+
+
     run(){
-        this.spawnerId = setInterval(() => {
-            this.buildingSpawn([800, this.dimensions[1]*(0.5+Math.random()*0.4)], 300)
-        }, 4000);
+        // this.spawnerId = setInterval(() => {
+        //     this.buildingSpawn([800, this.dimensions[1]*(0.5+Math.random()*0.4)], 300)
+        // }, 4000);
         requestAnimationFrame(this.animate)
     }
 
     start(){
+        // Reset Values
         this.gameOver = false;
         this.score = 0;
         this.objects = new Set();
@@ -122,12 +115,17 @@ class Game{
         this.started = true;
         clearInterval(this.spawnerId);
         this.spawnerId = undefined;
-        this.buildingSpawn([100, this.last_y], 800, [-10, 0]);
+
+        // Spawn new player, (And speedometer?)
         this.player = new Player(this.gameContext, this);
         this.speedometer = new Speedometer(this.gameContext, this);
-        this.objects.add(this.player);
-        this.objects.add(this.speedometer);
-        setTimeout(this.platformSequence.bind(this, (sequences.easy[0])), 1000);
+        this.barrier = new Barrier(this.gameContext, this);
+        this.staticObjects.add(this.speedometer);
+        // this.platforms.add(this.barrier);
+
+        // Spawn sequence for platforms
+        this.platformController.buildingSpawn([0, this.dimensions[1]*.5], 600, [0, 0]);
+        this.platformController.endless();
     }
 
 

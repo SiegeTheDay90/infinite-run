@@ -5,6 +5,7 @@ class SolidObject {
         this.velocity = velocity;
         this.context = context;
         this.game = game;
+        this.facingRight = true;
     }
 
     move(delta){

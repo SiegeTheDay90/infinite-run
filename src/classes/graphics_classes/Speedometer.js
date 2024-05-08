@@ -1,4 +1,4 @@
-import StaticObject from "./StaticObject";
+import StaticObject from "../abstract_classes/StaticObject";
 
 class Speedometer extends StaticObject{
     constructor(context, game){

@@ -1,4 +1,4 @@
-import Platform from "./Platform";
+import Platform from "../platform_controller/Platform";
 
 class Building extends Platform{
     constructor(context, game, position, width = 2, velocity=[0,0]){
