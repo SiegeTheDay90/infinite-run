@@ -33,6 +33,16 @@ class PlatformController {
 
     }
 
+    endless(){
+        this.buildingSpawn([this.game.dimensions[0]+10, this.game.dimensions[1]*(Math.random()*0.5+0.25)], (Math.random()*400+300), [0, 0]);
+        this.buildingSpawn([this.game.dimensions[0]+910, this.game.dimensions[1]*(Math.random()*0.5+0.25)], (Math.random()*400+300), [0, 0]);
+        if(!this.game.gameOver){
+            setTimeout(() => {
+                this.endless();
+            }, 6000);
+        }
+    }
+
     platformSpawn(position, width, velocity=[0, 0]){
         this.game.platforms.add(new Platform(this.game.gameContext, this.game, [...position], width, [...velocity]));
     }

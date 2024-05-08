@@ -4,6 +4,7 @@ import Player from "./entities/Player";
 import Background from "./graphics_classes/Background";
 import Speedometer from "./graphics_classes/Speedometer";
 import PlatformController from "./platform_controller/platform_controller";
+import Barrier from "./entities/Barrier";
 
 class Game{
     constructor(contexts, dimensions){ // base width and height = 800 x 450
@@ -25,6 +26,7 @@ class Game{
         this.lastTime = 0;
         this.animate = this.animate.bind(this);
         this.background = new Background(contexts.background, this);
+        this.barrier;
         this.addListeners();
     }
 
@@ -47,12 +49,14 @@ class Game{
         this.objects.forEach(object => object.move(delta*1.1));
         this.platforms.forEach(platform => platform.move(delta*1.1));
         this.background.move(delta*1.1);
+        this.barrier?.move(delta*1.1);
     }
 
     draw(){
         this.background.draw();
         this.gameContext.clearRect(0, 0, ...this.dimensions);
         this.player?.draw();
+        this.barrier?.draw();
         this.objects.forEach(object => object.draw());
         this.staticObjects.forEach(object => object.draw());
         this.platforms.forEach(object => object.draw());
@@ -86,6 +90,7 @@ class Game{
     // Game#scrollX
 
     scrollX(dx){
+        this.barrier.position[0] += dx;
         this.objects.forEach(object => object.position[0] += dx);
         this.platforms.forEach(object => object.position[0] += dx);
     }    
@@ -114,12 +119,13 @@ class Game{
         // Spawn new player, (And speedometer?)
         this.player = new Player(this.gameContext, this);
         this.speedometer = new Speedometer(this.gameContext, this);
-        // this.objects.add(this.player);
+        this.barrier = new Barrier(this.gameContext, this);
         this.staticObjects.add(this.speedometer);
+        // this.platforms.add(this.barrier);
 
-        // Spawn Initial Platforms
-        this.platformController.buildingSpawn([0, this.dimensions[1]*.75], 800, [0, 0]);
-
+        // Spawn sequence for platforms
+        this.platformController.buildingSpawn([0, this.dimensions[1]*.5], 600, [0, 0]);
+        this.platformController.endless();
     }
 
 

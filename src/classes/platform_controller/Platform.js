@@ -8,7 +8,7 @@ class Platform extends SolidObject {
 
     move(delta){
         super.move(delta);
-        if(this.position[0] < 0-this.dimensions[0]-50){
+        if(this.position[0]+this.dimensions[0] < this.game.barrier?.position[0]){
             this.destroy();
         }
     }

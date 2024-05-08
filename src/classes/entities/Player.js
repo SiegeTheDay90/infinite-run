@@ -2,12 +2,14 @@ import SolidObject from "../abstract_classes/SolidObject";
 
 class Player extends SolidObject{
     constructor(context, game){
-        super(context, game, [game.dimensions[0]/2, 5], [0, 0], [45*game.scale, 45*game.scale]);
+        super(context, game, [game.dimensions[0]/4, 5], [5, 0], [45*game.scale, 45*game.scale]);
         this.addListeners();
         this.standing = false;
         this.footing = undefined;
-        this.spriteSheet = new Image();
-        this.spriteSheet.src = "./runner.png";
+        this.spriteSheetRight = new Image();
+        this.spriteSheetRight.src = "./runnerRight.png";
+        this.spriteSheetLeft = new Image();
+        this.spriteSheetLeft.src = "./runnerLeft.png";
         this.spriteState = 0;
         this.relativeSpeed = 0;
         this.death = false;
@@ -24,7 +26,7 @@ class Player extends SolidObject{
             // Apply footing velocity if standing
             this.velocity = [
                 // Slow horizontal velocity while on ground
-                this.velocity[0]*0.99, 
+                this.velocity[0]*0.995, 
                 // Match vertical velocity to footing's vertical velocity
                 this.footing.velocity[1]
             ];
@@ -49,7 +51,7 @@ class Player extends SolidObject{
                 const impact = Math.floor((this.velocity[1]/4));
 
                 // Decrease horizontal velocity based on impact
-                this.velocity[0] += this.footing.velocity[0] * 0.20 * impact;
+                // this.velocity[0] += this.footing.velocity[0] * 0.20 * impact;
 
                 // Match vertical velocity of footing
                 this.velocity[1] = this.footing.velocity[1];
@@ -80,7 +82,7 @@ class Player extends SolidObject{
         ];
         
         // Edge of Screen?
-        if(nextPosition[0]/this.game.dimensions[0] > 0.65 || nextPosition[0]/this.game.dimensions[0] < 0.35 ){
+        if(nextPosition[0]/this.game.dimensions[0] > 0.35 || nextPosition[0]/this.game.dimensions[0] < 0.2 ){
             //  Call Game#scrollX instead of updating x-position.
             this.game.scrollX(-this.velocity[0]*delta*this.game.scale);
             this.position[1] = nextPosition[1];
@@ -122,9 +124,9 @@ class Player extends SolidObject{
 
     draw(){
         if(this.facingRight === false){
-            this.context.drawImage(this.spriteSheet, ...this.spriteArgs());
+            this.context.drawImage(this.spriteSheetLeft, ...this.spriteArgs());
         } else {
-            this.context.drawImage(this.spriteSheet, ...this.spriteArgs());
+            this.context.drawImage(this.spriteSheetRight, ...this.spriteArgs());
         }
     }
 
@@ -143,7 +145,7 @@ class Player extends SolidObject{
                         if(this.velocity[0] > 0){
                             // While moving right or standing still
                             this.velocity = [
-                                Math.min(this.velocity[0]*1.2, 10),
+                                Math.min(this.velocity[0]*1.6, 17),
                                 this.velocity[1]
                             ]
                             this.facingRight = true;
@@ -167,7 +169,7 @@ class Player extends SolidObject{
                         if(this.velocity[0] < 0){
                             // While moving left or standing still
                             this.velocity = [
-                                Math.max(this.velocity[0]*1.2, -10),
+                                Math.max(this.velocity[0]*1.6, -17),
                                 this.velocity[1]
                             ]
                         } else if(this.velocity[0] === 0){
