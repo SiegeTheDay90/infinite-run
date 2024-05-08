@@ -124,7 +124,7 @@ class Game{
         // this.platforms.add(this.barrier);
 
         // Spawn sequence for platforms
-        this.platformController.buildingSpawn([0, this.dimensions[1]*.5], 600, [0, 0]);
+        this.platformController.buildingSpawn([0, this.dimensions[1]*.5], 700, [0, 0]);
         this.platformController.endless();
     }
 

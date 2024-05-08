@@ -13,6 +13,7 @@ class Player extends SolidObject{
         this.spriteState = 0;
         this.relativeSpeed = 0;
         this.death = false;
+        this.topSpeed = 20;
         this.keysDown = {};
         this.coolDown = {};
     }
@@ -145,7 +146,7 @@ class Player extends SolidObject{
                         if(this.velocity[0] > 0){
                             // While moving right or standing still
                             this.velocity = [
-                                Math.min(this.velocity[0]*1.6, 17),
+                                Math.min(this.velocity[0]*1.3, this.topSpeed),
                                 this.velocity[1]
                             ]
                             this.facingRight = true;
@@ -169,7 +170,7 @@ class Player extends SolidObject{
                         if(this.velocity[0] < 0){
                             // While moving left or standing still
                             this.velocity = [
-                                Math.max(this.velocity[0]*1.6, -17),
+                                Math.max(this.velocity[0]*1.3, -this.topSpeed),
                                 this.velocity[1]
                             ]
                         } else if(this.velocity[0] === 0){
