@@ -13,7 +13,7 @@ class Barrier extends SolidObject{
     }
 
     move(delta){
-        if(this.velocity[0] < 16) this.velocity[0] *= 1.01;
+        if(this.velocity[0] < 16.5) this.velocity[0] *= 1.008;
         this.position = [
             this.position[0] + this.velocity[0]*delta*this.game.scale, 
             this.position[1] + this.velocity[1]*delta*this.game.scale
@@ -21,7 +21,8 @@ class Barrier extends SolidObject{
     }
 
     draw(color="green"){
-
+        this.context.fillStyle = color;
+        this.context.fillRect(...this.position, ...this.dimensions);
         const spriteRow = Math.floor(this.spriteState/4);
         const spriteCol = this.spriteState%4;
         const secondary = (this.spriteState+3)%19;
@@ -36,7 +37,7 @@ class Barrier extends SolidObject{
             spriteRow*96+30, // sy
             96, //sw
             66, //sh
-            this.position[0]+895, //dx
+            this.position[0]+865, //dx
             this.position[1]-180, //dy
             280, // dw
             this.game.dimensions[1]*1.5, //dh
@@ -47,7 +48,7 @@ class Barrier extends SolidObject{
             secondarySpriteRow*96+30, // sy
             96, //sw
             66, //sh
-            this.position[0]+890, //dx
+            this.position[0]+860, //dx
             this.position[1]-180-20, //dy
             250, // dw
             this.game.dimensions[1]*1.5, //dh
@@ -58,7 +59,7 @@ class Barrier extends SolidObject{
             tertiarySpriteRow*96+30, // sy
             96, //sw
             66, //sh
-            this.position[0]+850, //dx
+            this.position[0]+820, //dx
             this.position[1]-180-10, //dy
             250, // dw
             this.game.dimensions[1]*1.5, //dh

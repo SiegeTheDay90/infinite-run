@@ -63,7 +63,7 @@ class Player extends SolidObject{
                 setTimeout(() => {
                     this.coolDown["jump"] = false;
                     this.rolling = false;
-                }, 125 * impact);
+                }, 200 * impact);
 
                 
                 this.standing = true;
