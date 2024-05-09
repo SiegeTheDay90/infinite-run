@@ -35,6 +35,7 @@ class SolidObject {
 
 
     collides(otherObject){
+        if(!otherObject) return false;
         let thisBox = this.collisionBox();
         let otherBox = otherObject.collisionBox();
 

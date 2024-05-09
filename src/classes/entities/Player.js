@@ -2,9 +2,10 @@ import SolidObject from "../abstract_classes/SolidObject";
 
 class Player extends SolidObject{
     constructor(context, game){
-        super(context, game, [game.dimensions[0]/4, 5], [5, 0], [45*game.scale, 45*game.scale]);
+        super(context, game, [game.dimensions[0]/5+10, -20], [6, 0], [45*game.scale, 45*game.scale]);
         this.addListeners();
         this.standing = false;
+        this.jumping = false;
         this.footing = undefined;
         this.spriteSheetRight = new Image();
         this.spriteSheetRight.src = "./runnerRight.png";
@@ -13,7 +14,7 @@ class Player extends SolidObject{
         this.spriteState = 0;
         this.relativeSpeed = 0;
         this.death = false;
-        this.topSpeed = 17;
+        this.topSpeed = 20;
         this.keysDown = {};
         this.coolDown = {};
         this.distTraveled = 0;
@@ -21,25 +22,13 @@ class Player extends SolidObject{
 
     move(delta){
 
-        // Apply gravity if not standing
-        if(!this.standing){this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.4, 16)]}
-        
-        else{
-            // Apply footing velocity if standing
-            this.velocity = [
-                // Slow horizontal velocity while on ground
-                this.velocity[0]*0.995, 
-                // Match vertical velocity to footing's vertical velocity
-                this.footing.velocity[1]
-            ];
-
-            // this.velocity[1] = 0;
-
-            // //  If horizontal velcoity is greater than footing velocity
-            // if(this.velocity[0] >= this.footing.velocity[0]*0.5 && !this.keysDown["ArrowRight"]){
-
-            //     this.velocity[0] += this.footing.velocity[0]*0.1
-            // }
+        if(!this.jumping && !this.standing){                                            // Apply strong gravity if not jumping
+            this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.4, 16)]
+        } else if(this.jumping){                                                        // Apply small gravity if jumping
+            this.velocity = [this.velocity[0], Math.min(this.velocity[1] + 0.05, 16)]
+        }else if(this.standing){                                                        // Apply slow down and match footing vertically
+            this.velocity = [this.velocity[0]*0.995, this.footing.velocity[1]];
+            if(this.rolling) this.velocity[0] *= 0.99;
         };
 
 
@@ -50,7 +39,7 @@ class Player extends SolidObject{
             if(!this.standing){ // land from air
 
                 
-                const impact = Math.floor((this.velocity[1]/4));
+                const impact = Math.floor((this.velocity[1]/16));
 
                 // Decrease horizontal velocity based on impact
                 // this.velocity[0] += this.footing.velocity[0] * 0.20 * impact;
@@ -59,11 +48,17 @@ class Player extends SolidObject{
                 this.velocity[1] = this.footing.velocity[1];
 
                 // Roll and set jump cooldown based on impact
-                this.rolling = true;
-                setTimeout(() => {
-                    this.coolDown["jump"] = false;
-                    this.rolling = false;
-                }, 200 * impact);
+                if(impact > 0.15){
+                    this.rolling = true;
+                    setTimeout(() => {
+                        this.coolDown["jump"] = false;
+                        this.rolling = false;
+                    }, 800**(impact));
+                } else {
+                    setTimeout(() => {
+                        this.coolDown["jump"] = false;
+                    }, 250)
+                }
 
                 
                 this.standing = true;
@@ -149,7 +144,10 @@ class Player extends SolidObject{
                         if(this.velocity[0] > 0){
                             // While moving right or standing still
                             this.velocity = [
-                                Math.min(this.velocity[0]*1.3, this.topSpeed),
+                                Math.min(
+                                    this.velocity[0] + (this.topSpeed - this.velocity[0])*2/(this.topSpeed),
+                                    this.topSpeed
+                                ),
                                 this.velocity[1]
                             ]
                             this.facingRight = true;
@@ -173,7 +171,7 @@ class Player extends SolidObject{
                         if(this.velocity[0] < 0){
                             // While moving left or standing still
                             this.velocity = [
-                                Math.max(this.velocity[0]*1.3, -this.topSpeed),
+                                Math.max(this.velocity[0]*1.1, -this.topSpeed),
                                 this.velocity[1]
                             ]
                         } else if(this.velocity[0] === 0){
@@ -201,10 +199,13 @@ class Player extends SolidObject{
     jump(){
         if(!this.coolDown["jump"]){
             this.position = [this.position[0], this.position[1]-7];
-            this.velocity = [this.velocity[0], -18];
+            this.velocity = [this.velocity[0], -10];
+            this.jumping = true;
+            setTimeout(() => this.jumping = false, 500);
+            setInterval(() => { if(!this.keysDown[" "]) this.jumping = false })
             this.coolDown["jump"] = true;
             this.standing = false;
-            this.footing = undefined;
+            this.footing = null;
         }
     }
 

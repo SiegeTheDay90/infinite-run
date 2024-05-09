@@ -36,6 +36,12 @@ class Game{
                 this.start();
             }
         });
+
+        document.addEventListener("keydown", e => {
+            if( e.key == " " && !this.started){
+                this.start();
+            }
+        })
     }
 
     resize(dimensions){

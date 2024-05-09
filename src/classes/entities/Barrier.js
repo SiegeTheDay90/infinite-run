@@ -2,7 +2,7 @@ import SolidObject from "../abstract_classes/SolidObject";
 
 class Barrier extends SolidObject{
     constructor(context, game){
-        super(context, game, [-1150, 0], [6, 0], [1000, game.dimensions[1]*game.scale])
+        super(context, game, [-1050, 0], [3, 0], [1000, game.dimensions[1]*game.scale])
         this.sprite = new Image();
         this.sprite.src = "./fire.png";
         this.spriteState = 0;
@@ -13,7 +13,7 @@ class Barrier extends SolidObject{
     }
 
     move(delta){
-        if(this.velocity[0] < 16.5) this.velocity[0] *= 1.008;
+        if(this.velocity[0] < 13.5) this.velocity[0] *= 1.008;
         this.position = [
             this.position[0] + this.velocity[0]*delta*this.game.scale, 
             this.position[1] + this.velocity[1]*delta*this.game.scale
@@ -21,8 +21,8 @@ class Barrier extends SolidObject{
     }
 
     draw(color="green"){
-        this.context.fillStyle = color;
-        this.context.fillRect(...this.position, ...this.dimensions);
+        // this.context.fillStyle = color;
+        // this.context.fillRect(...this.position, ...this.dimensions);
         const spriteRow = Math.floor(this.spriteState/4);
         const spriteCol = this.spriteState%4;
         const secondary = (this.spriteState+3)%19;
