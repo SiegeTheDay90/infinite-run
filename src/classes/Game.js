@@ -94,7 +94,7 @@ class Game{
             return this.run();
         }
 
-        if(this.player?.distTraveled > 1800){
+        if(this.player?.distTraveled > 2100){
             this.player.distTraveled = 0;
             this.platformController.spawnNextSequence();
         }

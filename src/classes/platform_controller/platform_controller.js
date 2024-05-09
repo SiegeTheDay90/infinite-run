@@ -41,6 +41,7 @@ class PlatformController {
         if(this.last_y < this.game.dimensions[1]*0.3) this.last_y = this.game.dimensions[1]*0.3;
         this.buildingSpawn([this.game.dimensions[0]+10, this.last_y], (Math.random()*100+500), [0, 0]);
         this.buildingSpawn([this.game.dimensions[0]+900, this.last_y + (Math.random()*0.3 - 0.15)*this.game.dimensions[1]], (Math.random()*100+500), [0, 0]);
+        this.buildingSpawn([this.game.dimensions[0]+1750, this.last_y + (Math.random()*0.1 - 0.05)*this.game.dimensions[1]], (Math.random()*100+300), [0, 0]);
     }
 
     endless(){
