@@ -6,6 +6,7 @@ import Building from "../platforms/Building";
 class PlatformController {
     constructor(game){
         this.game = game;
+        this.last_y = game.dimensions[1]*0.5;
         this.buildingSpawn = this.buildingSpawn.bind(this);
         this.platformSpawn = this.platformSpawn.bind(this);
     }
@@ -31,6 +32,15 @@ class PlatformController {
             }
         }
 
+    }
+
+    spawnNextSequence(){
+        console.log("Sequence Spanwed")
+        this.last_y = this.last_y + (Math.random()*0.2 - 0.1)*this.game.dimensions[1];
+        if(this.last_y > this.game.dimensions[1]*0.8) this.last_y = this.game.dimensions[1]*0.8;
+        if(this.last_y < this.game.dimensions[1]*0.3) this.last_y = this.game.dimensions[1]*0.3;
+        this.buildingSpawn([this.game.dimensions[0]+10, this.last_y], (Math.random()*100+500), [0, 0]);
+        this.buildingSpawn([this.game.dimensions[0]+900, this.last_y + (Math.random()*0.3 - 0.15)*this.game.dimensions[1]], (Math.random()*100+500), [0, 0]);
     }
 
     endless(){

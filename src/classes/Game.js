@@ -9,9 +9,9 @@ import Barrier from "./entities/Barrier";
 class Game{
     constructor(contexts, dimensions){ // base width and height = 800 x 450
         this.gameContext = contexts.game;
-        this.platformController = new PlatformController(this);
         this.bgContext = contexts.background;
         this.dimensions = dimensions;
+        this.platformController = new PlatformController(this);
         this.scale = dimensions[0]/800;
         this.logo = new Image();
         this.logo.src = "./logo.png";
@@ -56,10 +56,10 @@ class Game{
         this.background.draw();
         this.gameContext.clearRect(0, 0, ...this.dimensions);
         this.player?.draw();
-        this.barrier?.draw();
         this.objects.forEach(object => object.draw());
-        this.staticObjects.forEach(object => object.draw());
         this.platforms.forEach(object => object.draw());
+        this.barrier?.draw();
+        this.staticObjects.forEach(object => object.draw());
         if(!this.started){
             this.gameContext.drawImage(this.logo, this.dimensions[0]*0.2, 0, this.dimensions[0]*0.6, this.dimensions[1]*0.6);
             this.gameContext.fillStyle = ["#ffffff", "#e3e3ee", "#e3e3eff", "#f3f3ff", "#ddddee"][Math.floor(Math.random()*5)];
@@ -73,12 +73,24 @@ class Game{
     }
 
     animate(time){
+        if(this.player?.position[1] > this.dimensions[1] || this.player?.collides(this.barrier)){
+            this.gameOver = true;
+        }
+
         if(this.gameOver && this.started){
             this.gameOver = false;
             this.started = false;
             this.objects = new Set();
             this.platforms = new Set();
+            this.player = null;
+            this.barrier = null;
+            clearInterval(this.scoreInterval);
             return this.run();
+        }
+
+        if(this.player?.distTraveled > 1800){
+            this.player.distTraveled = 0;
+            this.platformController.spawnNextSequence();
         }
         const delta = time - this.lastTime;
         this.lastTime = time;
@@ -125,7 +137,14 @@ class Game{
 
         // Spawn sequence for platforms
         this.platformController.buildingSpawn([0, this.dimensions[1]*.5], 700, [0, 0]);
-        this.platformController.endless();
+        this.platformController.spawnNextSequence();
+        // this.platformController.endless();
+
+        this.scoreInterval = setInterval(() => {
+            if(this.player.standing){
+                this.score += 10;
+            }
+        }, 500)
     }
 
 

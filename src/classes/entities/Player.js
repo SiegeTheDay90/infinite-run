@@ -13,9 +13,10 @@ class Player extends SolidObject{
         this.spriteState = 0;
         this.relativeSpeed = 0;
         this.death = false;
-        this.topSpeed = 20;
+        this.topSpeed = 17;
         this.keysDown = {};
         this.coolDown = {};
+        this.distTraveled = 0;
     }
 
     move(delta){
@@ -62,7 +63,7 @@ class Player extends SolidObject{
                 setTimeout(() => {
                     this.coolDown["jump"] = false;
                     this.rolling = false;
-                }, 200 * impact);
+                }, 125 * impact);
 
                 
                 this.standing = true;
@@ -81,6 +82,8 @@ class Player extends SolidObject{
             this.position[0] + this.velocity[0]*delta*this.game.scale,
             this.position[1] + this.velocity[1]*delta*this.game.scale
         ];
+
+        this.distTraveled += this.velocity[0]*delta;
         
         // Edge of Screen?
         if(nextPosition[0]/this.game.dimensions[0] > 0.35 || nextPosition[0]/this.game.dimensions[0] < 0.2 ){
@@ -138,7 +141,7 @@ class Player extends SolidObject{
                 this.jump();
                 this.keysDown[e.key] ||= setInterval(this.jump.bind(this), 300);
                 
-            } else if(e.key == "ArrowRight"){ //} && this.standing){
+            } else if(e.key == "ArrowRight" || e.key =="d"){ //} && this.standing){
                 e.preventDefault();
                 
                 this.keysDown[e.key] ||= setInterval(function(){
@@ -162,7 +165,7 @@ class Player extends SolidObject{
                     }
                 }.bind(this), 100);
                 
-            } else if(e.key == "ArrowLeft"){ //&& this.standing){
+            } else if(e.key == "ArrowLeft" || e.key == "a"){ //&& this.standing){
                 e.preventDefault();
                
                 this.keysDown[e.key] ||= setInterval(function(){

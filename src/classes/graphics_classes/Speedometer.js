@@ -10,13 +10,14 @@ class Speedometer extends StaticObject{
     }
 
     draw(){
-        const relative_velocity = (this.game.player.velocity[0] - (this.game.player.footing?.velocity[0]||0))/(10-(this.game.player.footing?.velocity[0]||0));
+        if(!this.game.player) return null;
+        const relative_velocity = (this.game.player.velocity[0] - (this.game.player.footing?.velocity[0]||0))/(17-(this.game.player.footing?.velocity[0]||0));
         this.context.fillStyle = "white";
         this.context.font = "16px serif";
         this.context.fillText("Speed", this.position[0], this.position[1]+16, this.dimensions[0]);
-        this.context.fillStyle = "red";
+        this.context.fillStyle = "blue";
         this.context.fillRect(this.position[0], this.position[1]-20, relative_velocity*this.dimensions[0], 20);
-        this.context.strokeStyle = "white";
+        this.context.strokeStyle = "black";
         this.context.strokeRect(this.position[0], this.position[1]-20, this.dimensions[0], 20);
     }
 }

@@ -2,7 +2,7 @@ import Platform from "../platform_controller/Platform";
 
 class Building extends Platform{
     constructor(context, game, position, width = 2, velocity=[0,0]){
-        super(context, game, position, width, velocity);
+        super(context, game, position, width*game.scale, velocity);
         this.sprite = new Image();
         this.sprite.src = "./building.png";
     }
