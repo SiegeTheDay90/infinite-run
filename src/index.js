@@ -1,4 +1,5 @@
 import Game from "./classes/Game.js";
+import HitCounter from "./scripts/HitCounter";
 import { initializeApp } from "firebase/app";
 import { getDocs, getFirestore } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore"; 
@@ -7,6 +8,9 @@ import "./index.scss";
 "use strict";
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    const counter = HitCounter();
+    counter.inc("InfiniteRun");
     const game = document.getElementById("game");
 
     const firebaseConfig = {
