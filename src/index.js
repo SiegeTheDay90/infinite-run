@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    buildHighScoreList();
+    buildHighScoreList('global');
 
     
     const highScoreSelector = document.getElementById('high-score-selector');
