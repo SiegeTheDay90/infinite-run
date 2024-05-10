@@ -137,7 +137,7 @@ class Player extends SolidObject{
                 this.keysDown[e.key] ||= setInterval(this.jump.bind(this), 300);
                 
             } else if(e.key == "ArrowRight" || e.key =="d"){ //} && this.standing){
-                e.preventDefault();
+                if(this.started && !this.gameOver) e.preventDefault();
                 
                 this.keysDown[e.key] ||= setInterval(function(){
                     if(this.standing && !this.rolling){
@@ -164,7 +164,7 @@ class Player extends SolidObject{
                 }.bind(this), 100);
                 
             } else if(e.key == "ArrowLeft" || e.key == "a"){ //&& this.standing){
-                e.preventDefault();
+                if(this.started && !this.gameOver) e.preventDefault();
                
                 this.keysDown[e.key] ||= setInterval(function(){
                     if(this.standing && !this.rolling){

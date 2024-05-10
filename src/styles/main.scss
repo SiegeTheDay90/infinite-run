@@ -7,7 +7,6 @@
     padding: 20px 0;
     border-radius: 20px;
     background-color: $dark-gray;
-    height: 50vh;
     justify-content: space-around;
 }
 
@@ -24,6 +23,28 @@
     position: absolute;
     top: 0;
     left: 0;
+}
+
+#left {
+    padding: 10px;
+    h3{color: white}
+    .high-scores-div, .settings-div{
+        margin-left: 10%;
+        ol{
+            color: white;
+            margin-top: 10px;
+            padding-left: 10px;
+            li{
+                list-style-type:decimal;
+                list-style-position: inside;
+            }
+        }
+
+        div{
+            padding-top: 10px;
+            padding-left: 10px;
+        }
+    }
 }
 
 #right {

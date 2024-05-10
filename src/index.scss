@@ -2,3 +2,16 @@
 @import './styles/reset.scss';
 @import './styles/main.scss';
 @import './styles/header.scss';
+
+
+#high-score-dialog {
+    width: 225px;
+    font-size: 14px;
+    // background: #051821;
+    // color: #f58800;
+    // border: 1px solid #266867;
+    border-radius: 8px;
+    position: absolute;
+    top: 15%;
+    text-align: center;
+}

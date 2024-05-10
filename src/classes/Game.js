@@ -15,6 +15,7 @@ class Game{
         this.platformController = new PlatformController(this);
         this.scale = dimensions[0]/800;
         this.logo = new Image();
+        this.scoring = false;
         this.logo.src = "./logo.png";
         this.controls = new Image();
         this.controls.src = "./controls.png";
@@ -33,6 +34,78 @@ class Game{
         this.addListeners();
     }
 
+    async checkHighScores(){
+        let localhighscores = JSON.parse(window.localStorage['infinite-highscores']);
+        let globalhighscores = (await this.getScores())
+        .map(ele => ({score: ele.score, name: ele.name}))
+        .sort((f, s) => s.score - f.score);
+        let check = {
+            local: ((localhighscores.slice(0,5).some((score) => this.score > score.score) 
+            || localhighscores.length<5) 
+            && this.score > 0),
+            global: ((globalhighscores.slice(0,5).some((score) => this.score > score.score) 
+            || globalhighscores.length<5) 
+            && this.score > 0)
+        }
+        
+        if (Object.values(check).some((value) => (value === true))){
+            this.scoring = true;
+            const highScoreDialog = document.getElementById('high-score-dialog');
+            const nameInput = document.getElementById('high-score-name');
+            
+            nameInput.addEventListener('input', (e) =>{
+                if (e.target.value.length > 2){
+                    submitHighScore.disabled = false;
+                } else {
+                    submitHighScore.disabled = true;
+                }
+            })
+            
+            highScoreDialog.showModal();
+            
+            const submitHighScore = document.getElementById('submit-high-score');
+            submitHighScore.disabled = true;
+            
+            if(!submitHighScore.dataset.listened){
+                submitHighScore.addEventListener('click', async () => {
+                    const name = nameInput.value;
+                    highScoreDialog.close();
+                    if(name && check.local){
+                        localhighscores.push({name: name, score: this.score});
+                        localhighscores.sort((f, s) => s.score - f.score);
+                        localhighscores = localhighscores.slice(0, 10);
+                        window.localStorage['infinite-highscores'] = JSON.stringify(localhighscores);
+                    }
+            
+                    if(name && check.global){
+                        await this.sendScore(name, this.score);
+                    }
+    
+                    const highScoreSelector = document.getElementById('high-score-selector');
+            
+                    let type = highScoreSelector.className
+                    this.scoring = false;
+                    this.buildHighScoreList(type);
+                })
+                submitHighScore.dataset.listened = true;
+            }
+
+            const cancelHighScore = document.getElementById('cancel-high-score');
+            if(!cancelHighScore.dataset.listened){
+                cancelHighScore.addEventListener('click', function(){
+                    const highScoreDialog = document.getElementById('high-score-dialog');
+                    this.scoring = false;
+                    highScoreDialog.close();
+                })
+                cancelHighScore.dataset.listened = true;
+            }
+    
+        }
+    
+        this.newHighScore = Object.values(check).some(value => value === true)
+        return this.newHighScore
+    }
+
     addListeners(){
         document.getElementById("game").addEventListener('click', e => {
             if(!this.started){
@@ -41,7 +114,7 @@ class Game{
         });
 
         document.addEventListener("keydown", e => {
-            if( e.key == " " && !this.started){
+            if( e.key == " " && !this.started && !this.scoring){
                 this.start();
             }
         })
@@ -87,19 +160,19 @@ class Game{
         }
     }
 
-    animate(time){
+    async animate(time){
         if(this.player?.position[1] > this.dimensions[1] || this.player?.collides(this.barrier)){
             this.gameOver = true;
         }
 
         if(this.gameOver && this.started){
-            this.gameOver = false;
             this.started = false;
             this.objects = new Set();
             this.platforms = new Set();
             this.player = null;
             this.barrier = null;
             clearInterval(this.scoreInterval);
+            await this.checkHighScores();
             return this.run();
         }
 
@@ -157,9 +230,9 @@ class Game{
 
         this.scoreInterval = setInterval(() => {
             if(this.player.standing){
-                this.score += 10;
+                this.score += 1;
             }
-        }, 500)
+        }, 75)
     }
 
 

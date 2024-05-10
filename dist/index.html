@@ -18,37 +18,36 @@
             <a href="https://www.linkedin.com/in/clarence-smith-nyc/" target="_blank"><i class="fa-brands fa-linkedin contact-link"></i></a>
         </header>
         <div id="main">
-            <!-- <section id='left'>
-                <h3>Settings</h3>
-                <div class='settings-div'>
-                    <h4>Control Type</h4>
-                    <div id='control-buttons'>
-                        <button value="mouse" class="control-button" disabled><i class="fa-solid fa-mouse"></i></button>
-                        <button value="keyboard" class="control-button"><i class="fa-solid fa-keyboard"></i></button>
-                    </div>
+            <section id='left'>
+                <!-- <span id="high-scores-title">Local Leaderboard</span><br> <button id="high-score-selector" class="local">Show Global</button> -->
+                <div class="high-scores-div">
+                    <h3>High Scores</h3>
+                    <span id="high-scores-title">Local Leaderboard</span><br> <button id="high-score-selector" class="local">Show Global</button>
+                    <ol id ='high-scores-list'>
+                    </ol>
+                    <!-- <button id="clear-high-scores" value="clear" class="clear-button">Clear Local Scores</button> -->
                 </div>
                 <div class="settings-div">
-                    <h4>Sound</h4>
+                    <h3>Sound</h3>
                     <div id='sound-buttons'>
                         <button value="soundOn" class="sound-button" disabled><i class="fa-solid fa-volume-high" ></i></button>
                         <button value="soundOff" class="sound-button"><i class="fa-solid fa-volume-xmark"></i></button>
                     </div>
                 </div>
-                <div class='speed-div'>
-                    <h4>Game Speed</h4>
-                    <figure id = "speedometer">►►</figure>
-                    <form action="" method="" id='game-speed'>
-                        <input class="speed-button" type="button" value="Slower"><br>
-                        <input class="speed-button" type="button" value="Faster">
-                    </form>
-                </div>
-            </section> -->
+            </section> 
             <section id="canvas-container">
                 <canvas id="background" class="game-canvas"></canvas>
                 <canvas id="game" class="game-canvas"></canvas>
+                <dialog id="high-score-dialog">
+                    <p>Enter a name to submit your score!</p>
+                    <input id="high-score-name" placeholder="Your Name Here" class="text-input"><br>
+                        <button id="submit-high-score" class="high-score-button">Submit!</button>
+                        <button  id="cancel-high-score" class="high-score-button">No Thanks</button>
+                </dialog>
             </section>
 
             <section id="right">
+
                     <a href="https://siegetheday90.github.io/Interceptor/">
                             <img src="i.gif" alt="Play Interceptor!"/>
                             <p>Play Interceptor!</p>
