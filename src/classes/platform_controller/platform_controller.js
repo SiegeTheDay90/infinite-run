@@ -34,14 +34,34 @@ class PlatformController {
 
     }
 
-    spawnNextSequence(){
+    spawnNextSequence(numSections = 3){
         console.log("Sequence Spanwed")
-        this.last_y = this.last_y + (Math.random()*0.2 - 0.1)*this.game.dimensions[1];
-        if(this.last_y > this.game.dimensions[1]*0.8) this.last_y = this.game.dimensions[1]*0.8;
-        if(this.last_y < this.game.dimensions[1]*0.3) this.last_y = this.game.dimensions[1]*0.3;
-        this.buildingSpawn([this.game.dimensions[0]+10, this.last_y], (Math.random()*100+500), [0, 0]);
-        this.buildingSpawn([this.game.dimensions[0]+900, this.last_y + (Math.random()*0.3 - 0.15)*this.game.dimensions[1]], (Math.random()*100+500), [0, 0]);
-        this.buildingSpawn([this.game.dimensions[0]+1750, this.last_y + (Math.random()*0.1 - 0.05)*this.game.dimensions[1]], (Math.random()*100+300), [0, 0]);
+        this.game.levelLength = 0;
+        for(let i = 0; i < numSections; i++){
+            const heightChange = (Math.random()*0.48 - 0.24)*this.game.dimensions[1];
+            if(this.last_y + heightChange > this.game.dimensions[1]*.75){
+                this.last_y = this.game.dimensions[1]*.75
+            } else if(this.last_y + heightChange < this.game.dimensions[1]*.25){
+                this.last_y = this.game.dimensions[1]*.25
+            } else {
+                this.last_y += heightChange;
+            }
+            const gapLength = heightChange > 0 ? Math.random()*125+125 : Math.random()*150+150;
+            const platformLength = Math.random()*150 + (heightChange < 0 ? 200 : 400);
+            const sectionLength = gapLength + platformLength;
+            
+            this.buildingSpawn(
+                [
+                    this.game.dimensions[0] + this.game.levelLength, // offset off screen
+                    this.last_y // height change
+                ],  
+                platformLength,
+                [0, 0]
+            )
+
+            this.game.levelLength += sectionLength;
+        }
+        
     }
 
     endless(){

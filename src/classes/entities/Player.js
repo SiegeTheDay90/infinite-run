@@ -48,7 +48,7 @@ class Player extends SolidObject{
                 this.velocity[1] = this.footing.velocity[1];
 
                 // Roll and set jump cooldown based on impact
-                if(impact > 0.15){
+                if(impact > 0.08){
                     this.rolling = true;
                     setTimeout(() => {
                         this.coolDown["jump"] = false;

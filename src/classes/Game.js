@@ -11,10 +11,13 @@ class Game{
         this.gameContext = contexts.game;
         this.bgContext = contexts.background;
         this.dimensions = dimensions;
+        this.levelLength;
         this.platformController = new PlatformController(this);
         this.scale = dimensions[0]/800;
         this.logo = new Image();
         this.logo.src = "./logo.png";
+        this.controls = new Image();
+        this.controls.src = "./controls.png";
         this.started = false;
         this.gameOver = false;
         this.spawnerId;
@@ -55,7 +58,12 @@ class Game{
         this.objects.forEach(object => object.move(delta*1.1));
         this.platforms.forEach(platform => platform.move(delta*1.1));
         this.background.move(delta*1.1);
-        this.barrier?.move(delta*1.1);
+   
+        if( this.player?.position[0] - this.barrier?.position[0] > 1275){
+            this.barrier?.move(delta*1.7);
+        } else {
+            this.barrier?.move(delta*1.1);
+        }
     }
 
     draw(){
@@ -67,10 +75,11 @@ class Game{
         this.barrier?.draw();
         this.staticObjects.forEach(object => object.draw());
         if(!this.started){
-            this.gameContext.drawImage(this.logo, this.dimensions[0]*0.2, 0, this.dimensions[0]*0.6, this.dimensions[1]*0.6);
+            this.gameContext.drawImage(this.logo, this.dimensions[0]*0.275, 0, this.dimensions[0]*0.45, this.dimensions[1]*0.45);
+            this.gameContext.drawImage(this.controls, this.dimensions[0]*0.275, this.dimensions[1]*0.5, this.dimensions[0]*0.45, this.dimensions[1]*0.45);
             this.gameContext.fillStyle = ["#ffffff", "#e3e3ee", "#e3e3eff", "#f3f3ff", "#ddddee"][Math.floor(Math.random()*5)];
             this.gameContext.font = "28px serif";
-            this.gameContext.fillText("Click to Begin", this.dimensions[0]*0.4, this.dimensions[1]*0.7, this.dimensions[0]*0.8);
+            this.gameContext.fillText("Jump to Begin", this.dimensions[0]*0.035, this.dimensions[1]*0.5, this.dimensions[0]*0.205);
         } else {
             this.gameContext.fillStyle = "#ffffff";
             this.gameContext.font = "20px serif";
@@ -94,7 +103,7 @@ class Game{
             return this.run();
         }
 
-        if(this.player?.distTraveled > 2100){
+        if(this.player?.distTraveled > this.levelLength){
             this.player.distTraveled = 0;
             this.platformController.spawnNextSequence();
         }
